@@ -17,9 +17,14 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-
-    } catch {
-
+        const oneUser = await userDb.getById(req.params.id);
+        if (oneUser) {
+            res.status(200).json(oneUser)
+        } else {
+            res.status(404).json({message: 'user does not exist'})
+        }
+    } catch (error) {
+        res.status(500).json({error: 'error while retrieving user id'})
     }
 });
 
