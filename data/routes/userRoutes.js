@@ -64,7 +64,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/', async (req, res) => {
+router.put('/:id', async (req, res) => {
     const { name } = req.body;
     if (!name) {
         res.status(404).send(`<h2> You must enter in a name to update!</h2>`)
