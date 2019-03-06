@@ -29,7 +29,7 @@ router.get('/:id', async (req, res) => {
     } catch {
         res.status(500).json({error: 'id resource not found'})
     }
-})
+});
 
 router.post('/', async (req, res) => {
 const {text, user_id} = req.body
@@ -46,6 +46,29 @@ if (!text || !user_id) {
     } catch {
         res.status(500).json({error: 'There was an error while inserting the post into the database'})
     }
+});
+
+router.put('/:id', async (req, res) => {
+    const {text, user_id} = req.body;
+
+    if (!text || !user_id) {
+        res.status(404).json({message: 'Please provide the title and user_id to update'})
+    }
+
+    try {
+        const post = req.body;
+        const updatePost = await postDb.update(req.params.id, post)
+
+        if (updatePost) {
+            res.status(201).json(updatePost)
+        }
+    } catch {
+        res.status(500).json({ error: "The post information could not be modified."})
+    }
+});
+
+router.delete('/:id', async (req, res) => {
+    const deletePost = await postDb.remove(req.params.id)
 })
 
 
