@@ -61,6 +61,8 @@ router.put('/:id', async (req, res) => {
 
         if (updatePost) {
             res.status(201).json(updatePost)
+        } else {
+            res.status(404).json({message: 'The specified post id does not exist'})
         }
     } catch {
         res.status(500).json({ error: "The post information could not be modified."})
