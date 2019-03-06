@@ -6,10 +6,10 @@ const router = express.Router();
 const userDb = require('../helpers/userDb');
 
 
-function nameCheck(req, res, next) {
+const nameCheck = (req, res, next) => {
     req.body.name = req.body.name.replace(
         /\w\S*/g,
-        function(txt){
+        (txt) => {
             return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); 
         }
     )
