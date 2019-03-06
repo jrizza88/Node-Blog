@@ -28,5 +28,20 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+router.post('/', async (req, res) => {
+    const { name } = req.body;
+    if (!name) {
+        res.status(404).send(`<h2> Names cannot be blank!</h2>`)
+    }
 
+    try {
+        const user = req.body;
+        const insertUser = await userDb.insert(user);
+        if (insertUser) {
+            res.status(201).json(insertUser)
+        } 
+    } catch (error) {
+        res.status(500).send({error: 'error adding a new user'})
+    }
+});
 module.exports = router;
