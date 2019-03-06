@@ -3,7 +3,18 @@ const express = require('express');
 
 const router = express.Router();
 
-const userDb = require('../helpers/userDb')
+const userDb = require('../helpers/userDb');
+
+
+function nameCheck(req, res, next) {
+    req.body.name = req.body.name.replace(
+        /\w\S*/g,
+        function(txt){
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); 
+        }
+    )
+next();
+}
 
 router.get('/', async (req, res) => {
     try {
@@ -43,9 +54,7 @@ router.get('/:id/posts', async (req, res) => {
 }
 })
 
-module.exports = router;
-
-router.post('/', async (req, res) => {
+router.post('/', nameCheck, async (req, res) => {
     const { name } = req.body;
     if (!name) {
         res.status(404).send(`<h2> Names cannot be blank!</h2>`)
@@ -64,7 +73,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', nameCheck, async (req, res) => {
     const { name } = req.body;
     if (!name) {
         res.status(404).send(`<h2> You must enter in a name to update!</h2>`)
@@ -84,15 +93,30 @@ router.put('/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-    const deleteUser = await userDb.remove(req.params.id);
     try {
+        const {id} = req.params
+        const deleteUser = await userDb.remove(id);
         if (deleteUser) {
             res.status(200).json(deleteUser)
         } else {
             res.status(404).json({ message: "user with the specified ID does not exist."})
-        }
-    } catch (error) {
+            return;
+        } 
+    } catch {
         res.status(500).json({ error: "Please provide id for user."})
     }
 });
+
+// router.delete('/:id', (req,res) => {
+//     const { id } = req.params;
+//     userDb
+//       .remove(id)
+//       .then(deleteUser => {
+//         res.status(200).json(deleteUser)
+//       })
+//       .catch(error => {
+//         res.status(500).json({ error: "Please provide id for user."})
+//       });
+//   })
+
 module.exports = router;

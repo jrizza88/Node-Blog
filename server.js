@@ -13,12 +13,15 @@ const logMiddleware = logger('dev');
 const securityMiddleware = helmet();
 
 
-
 server.use(parser, logMiddleware, securityMiddleware);
+
+
 
 // import routes from user and post
 server.use('/api/posts', postRoutes)
-server.use('/api/users', userRoutes)
+server.use('/api/users',  userRoutes)
+
+
 
 
 server.get('/', (req, res) => {
