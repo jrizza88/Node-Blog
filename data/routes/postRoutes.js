@@ -31,6 +31,22 @@ router.get('/:id', async (req, res) => {
     }
 })
 
+router.post('/', async (req, res) => {
+const {text, user_id} = req.body
+if (!text || !user_id) {
+    res.status(404).send(`<h2> You did not enter either text or an user_id number!</h2>`)
+}
+    try {
+        const post = req.body;
+        console.log(post)
+        const insertPost = await postDb.insert(post)
+        if (insertPost) {
+            res.status(201).json(insertPost)
+        }
+    } catch {
+        res.status(500).json({error: 'There was an error while inserting the post into the database'})
+    }
+})
 
 
 
