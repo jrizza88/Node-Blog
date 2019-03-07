@@ -5,6 +5,8 @@ const router = express.Router();
 
 const userDb = require('../helpers/userDb');
 
+const postDb = require('../helpers/postDb');
+
 
 const nameCheck = (req, res, next) => {
     req.body.name = req.body.name.replace(
@@ -95,6 +97,8 @@ router.put('/:id', nameCheck, async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         const {id} = req.params
+        console.log("id", id);
+        const deletePosts = await postDb.removeByUser(id);
         const deleteUser = await userDb.remove(id);
         if (deleteUser) {
             res.status(200).json(deleteUser)
@@ -107,16 +111,5 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-// router.delete('/:id', (req,res) => {
-//     const { id } = req.params;
-//     userDb
-//       .remove(id)
-//       .then(deleteUser => {
-//         res.status(200).json(deleteUser)
-//       })
-//       .catch(error => {
-//         res.status(500).json({ error: "Please provide id for user."})
-//       });
-//   })
 
 module.exports = router;
