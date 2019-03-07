@@ -95,13 +95,14 @@ router.put('/:id', nameCheck, async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
+    const {id} = req.params
     try {
-        const {id} = req.params
+        // const {id} = req.params
         console.log("id", id);
         const deletePosts = await postDb.removeByUser(id);
         const deleteUser = await userDb.remove(id);
         if (deleteUser) {
-            res.status(200).json(deleteUser)
+            res.json({ removed: deleteUser})
         } else {
             res.status(404).json({ message: "user with the specified ID does not exist."})
             return;
